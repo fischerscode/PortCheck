@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  dart_test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        include:
+          - os: ubuntu-latest
+            output-name: uptodate.linux
+          - os: macOS-latest
+            output-name: uptodate.mac
+          - os: windows-latest
+            output-name: uptodate.windows.exe
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ${{ env.PUB_CACHE }}
+            .dart_tool
+            .packages
+          key: ${{ runner.os }}-dart-${{ hashFiles('pubspec.lock') }}
+      - uses: dart-lang/setup-dart@v1
+      - run: dart pub get
+      - run: dart test
+      - run: mkdir build
+      - name: build
+        run: dart compile exe bin/uptodate.dart -v -o build/${{ matrix.output-name }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.output-name }}
+          path: build/${{ matrix.output-name }}
