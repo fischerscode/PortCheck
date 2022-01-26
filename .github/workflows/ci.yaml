@@ -13,11 +13,11 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
         include:
           - os: ubuntu-latest
-            output-name: uptodate.linux
+            output-name: portcheck.linux
           - os: macOS-latest
-            output-name: uptodate.mac
+            output-name: portcheck.mac
           - os: windows-latest
-            output-name: uptodate.windows.exe
+            output-name: portcheck.windows.exe
 
     steps:
       - uses: actions/checkout@v2
@@ -33,7 +33,7 @@ jobs:
       - run: dart test
       - run: mkdir build
       - name: build
-        run: dart compile exe bin/uptodate.dart -v -o build/${{ matrix.output-name }}
+        run: dart compile exe bin/portcheck.dart -v -o build/${{ matrix.output-name }}
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.output-name }}
