@@ -34,7 +34,7 @@ jobs:
       - run: mkdir build
       - name: build
         run: dart compile exe bin/portcheck.dart -v -o build/${{ matrix.output-name }}
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.output-name }}
           path: build/${{ matrix.output-name }}
